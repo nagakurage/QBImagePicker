@@ -16,4 +16,6 @@
 @property (nonatomic, weak) QBImagePickerController *imagePickerController;
 @property (nonatomic, strong) PHAssetCollection *assetCollection;
 
+- (IBAction)selectAllButtonAction:(id)sender;
+
 @end

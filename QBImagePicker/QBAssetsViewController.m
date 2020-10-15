@@ -13,6 +13,7 @@
 #import "QBImagePickerController.h"
 #import "QBAssetCell.h"
 #import "QBVideoIndicatorView.h"
+#import "SelectionHeader.h"
 
 static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     return CGSizeMake(size.width * scale, size.height * scale);
@@ -65,6 +66,9 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 @property (nonatomic, assign) BOOL disableScrollToBottom;
 @property (nonatomic, strong) NSIndexPath *lastSelectedItemIndexPath;
+
+@property (nonatomic, assign) BOOL isSelectAll;
+@property (nonatomic, weak) SelectionHeader *selectionHeader;
 
 @end
 
@@ -197,7 +201,14 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     UIBarButtonItem *rightSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
     
     // Info label
-    NSDictionary *attributes = @{ NSForegroundColorAttributeName: [UIColor blackColor] };
+    UIColor* color = [UIColor blackColor];
+    UITraitCollection *trait = self.traitCollection;
+    if (@available(iOS 13.0, *)) {
+        if (trait.userInterfaceStyle == UIUserInterfaceStyleDark) {
+            color = [UIColor whiteColor];
+        }
+    }
+    NSDictionary *attributes = @{ NSForegroundColorAttributeName: color };
     UIBarButtonItem *infoButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:NULL];
     infoButtonItem.enabled = NO;
     [infoButtonItem setTitleTextAttributes:attributes forState:UIControlStateNormal];
@@ -494,6 +505,14 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
+    if (kind == UICollectionElementKindSectionHeader) {
+        UICollectionReusableView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader
+                                                                                  withReuseIdentifier:@"HeaderView"
+                                                                                         forIndexPath:indexPath];
+        _selectionHeader = (SelectionHeader * )headerView;
+        return headerView;
+    }
+    
     if (kind == UICollectionElementKindSectionFooter) {
         UICollectionReusableView *footerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter
                                                                                   withReuseIdentifier:@"FooterView"
@@ -659,6 +678,79 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     CGFloat width = (CGRectGetWidth(self.view.frame) - 2.0 * (numberOfColumns - 1)) / numberOfColumns;
     
     return CGSizeMake(width, width);
+}
+
+- (IBAction)selectAllButtonAction:(id)sender {
+    
+    QBImagePickerController *imagePickerController = self.imagePickerController;
+    NSMutableOrderedSet *selectedAssets = imagePickerController.selectedAssets;
+    
+    if (self.isSelectAll) {
+        self.isSelectAll = NO;
+        [_selectionHeader.selectAllButton setTitle:@"すべてを選択" forState:UIControlStateNormal];
+        
+         for (NSIndexPath *indexPath in self.collectionView.indexPathsForSelectedItems) {
+                 [self.collectionView deselectItemAtIndexPath:indexPath animated:NO];
+     
+             PHAsset *asset = self.fetchResult[indexPath.item];
+     
+             // Remove asset from set
+             [selectedAssets removeObject:asset];
+     
+             self.lastSelectedItemIndexPath = nil;
+     
+             [self updateDoneButtonState];
+     
+             if (self.imagePickerController.showsNumberOfSelectedAssets) {
+                 [self updateSelectionInfo];
+     
+                 if (selectedAssets.count == 0) {
+                     // Hide toolbar
+                     [self.navigationController setToolbarHidden:YES animated:YES];
+                 }
+             }
+     
+             if ([self.imagePickerController.delegate respondsToSelector:@selector(qb_imagePickerController:didDeselectAsset:)]) {
+                 [self.imagePickerController.delegate qb_imagePickerController:imagePickerController didDeselectAsset:asset];
+             }
+         }
+    } else {
+        self.isSelectAll = YES;
+        [_selectionHeader.selectAllButton setTitle:@"すべてを選択解除" forState:UIControlStateNormal];
+
+         for (NSIndexPath *indexPath in self.collectionView.indexPathsForVisibleItems) {
+             [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+             
+             PHAsset *asset = self.fetchResult[indexPath.item];
+             
+             if ([self isAutoDeselectEnabled] && selectedAssets.count > 0) {
+                 // Remove previous selected asset from set
+                 [selectedAssets removeObjectAtIndex:0];
+                 
+                 // Deselect previous selected asset
+                 if (self.lastSelectedItemIndexPath) {
+                     [self.collectionView deselectItemAtIndexPath:self.lastSelectedItemIndexPath animated:NO];
+                 }
+             }
+             
+             // Add asset to set
+             [selectedAssets addObject:asset];
+             
+             self.lastSelectedItemIndexPath = indexPath;
+             
+             [self updateDoneButtonState];
+             
+             if (imagePickerController.showsNumberOfSelectedAssets) {
+                 [self updateSelectionInfo];
+                 
+                 if (selectedAssets.count == 1) {
+                     // Show toolbar
+                     [self.navigationController setToolbarHidden:NO animated:YES];
+                 }
+             }
+             
+         }
+    }
 }
 
 @end
