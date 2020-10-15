@@ -8,6 +8,9 @@
 
 "albums.title" = "アルバム";
 
+"assets.header.select-all" = "すべてを選択";
+"assets.header.deselect-all" = "すべてを選択解除";
+
 "assets.footer.photo" = "写真: %ld枚";
 "assets.footer.photos" = "写真: %ld枚";
 "assets.footer.video" = "ビデオ: %ld本";

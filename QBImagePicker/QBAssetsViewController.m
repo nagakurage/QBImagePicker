@@ -96,6 +96,10 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     // Configure collection view
     self.collectionView.allowsMultipleSelection = self.imagePickerController.allowsMultipleSelection;
     
+    //
+    UICollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+    layout.sectionHeadersPinToVisibleBounds = true;
+    
     // Show/hide 'Done' button
     if (self.imagePickerController.allowsMultipleSelection) {
         [self.navigationItem setRightBarButtonItem:self.doneButton animated:NO];
@@ -510,6 +514,10 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
                                                                                   withReuseIdentifier:@"HeaderView"
                                                                                          forIndexPath:indexPath];
         _selectionHeader = (SelectionHeader * )headerView;
+        
+        NSBundle *bundle = self.imagePickerController.assetBundle;
+        [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.select-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
+        
         return headerView;
     }
     
@@ -684,10 +692,12 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     
     QBImagePickerController *imagePickerController = self.imagePickerController;
     NSMutableOrderedSet *selectedAssets = imagePickerController.selectedAssets;
+    NSBundle *bundle = self.imagePickerController.assetBundle;
     
     if (self.isSelectAll) {
         self.isSelectAll = NO;
-        [_selectionHeader.selectAllButton setTitle:@"すべてを選択" forState:UIControlStateNormal];
+        
+        [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.select-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
         
          for (NSIndexPath *indexPath in self.collectionView.indexPathsForSelectedItems) {
                  [self.collectionView deselectItemAtIndexPath:indexPath animated:NO];
@@ -716,7 +726,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
          }
     } else {
         self.isSelectAll = YES;
-        [_selectionHeader.selectAllButton setTitle:@"すべてを選択解除" forState:UIControlStateNormal];
+        [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.deselect-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
 
          for (NSIndexPath *indexPath in self.collectionView.indexPathsForVisibleItems) {
              [self.collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];

@@ -239,7 +239,7 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z35-vD-hwX">
-                                    <rect key="frame" x="159.5" y="16" width="95" height="28"/>
+                                    <rect key="frame" x="159.5" y="11" width="95" height="28"/>
                                     <fontDescription key="fontDescription" name="HiraginoSans-W3" family="Hiragino Sans" pointSize="16"/>
                                     <state key="normal" title="すべてを選択"/>
                                     <connections>
@@ -247,8 +247,9 @@
                                     </connections>
                                 </button>
                             </subviews>
+                            <color key="backgroundColor" name="AppBg"/>
                             <constraints>
-                                <constraint firstItem="z35-vD-hwX" firstAttribute="centerY" secondItem="CcO-3i-Caj" secondAttribute="centerY" constant="5" id="MEl-7f-5bg"/>
+                                <constraint firstItem="z35-vD-hwX" firstAttribute="centerY" secondItem="CcO-3i-Caj" secondAttribute="centerY" id="MEl-7f-5bg"/>
                                 <constraint firstItem="z35-vD-hwX" firstAttribute="centerX" secondItem="CcO-3i-Caj" secondAttribute="centerX" id="bne-Pe-jJ2"/>
                             </constraints>
                             <connections>
