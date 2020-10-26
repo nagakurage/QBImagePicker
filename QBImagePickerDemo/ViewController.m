@@ -30,6 +30,8 @@
     imagePickerController.mediaType = QBImagePickerMediaTypeAny;
     imagePickerController.allowsMultipleSelection = (indexPath.section == 1);
     imagePickerController.showsNumberOfSelectedAssets = YES;
+    imagePickerController.maximumNumberOfSelection = 0;
+    imagePickerController.isUnLimitSelection = YES;
     
     if (indexPath.section == 1) {
         switch (indexPath.row) {
@@ -39,16 +41,19 @@
                 
             case 2:
                 imagePickerController.maximumNumberOfSelection = 6;
+                imagePickerController.isUnLimitSelection = NO;
                 break;
                 
             case 3:
                 imagePickerController.minimumNumberOfSelection = 3;
                 imagePickerController.maximumNumberOfSelection = 6;
+                imagePickerController.isUnLimitSelection = NO;
                 break;
 
             case 4:
                 imagePickerController.maximumNumberOfSelection = 2;
                 [imagePickerController.selectedAssets addObject:[PHAsset fetchAssetsWithOptions:nil].lastObject];
+                imagePickerController.isUnLimitSelection = NO;
                 break;
                 
             default:

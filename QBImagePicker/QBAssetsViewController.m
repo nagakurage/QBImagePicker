@@ -517,9 +517,13 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
         
         NSBundle *bundle = self.imagePickerController.assetBundle;
         if (_isSelectAll) {
-            [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.deselect-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
+            [UIView performWithoutAnimation:^{
+                [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.deselect-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
+            }];
         } else {
-            [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.select-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
+            [UIView performWithoutAnimation:^{
+                [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.select-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
+            }];
         }
         return headerView;
     }
@@ -700,10 +704,15 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     if (self.isSelectAll) {
         self.isSelectAll = NO;
         
-        for (NSIndexPath *indexPath in self.collectionView.indexPathsForSelectedItems) {
+        for (long i = selectedAssets.count - 1; i >= 0 ; i--) {
+            PHAsset *asset = selectedAssets[i];
+            
+//        }
+        
+//        for (NSIndexPath *indexPath in self.collectionView.indexPathsForSelectedItems) {
             //                 [self.collectionView deselectItemAtIndexPath:indexPath animated:NO];
             
-            PHAsset *asset = self.fetchResult[indexPath.item];
+//            PHAsset *asset = self.fetchResult[indexPath.item];
             
             // Remove asset from set
             [selectedAssets removeObject:asset];
