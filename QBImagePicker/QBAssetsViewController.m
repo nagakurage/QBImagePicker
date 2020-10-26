@@ -736,7 +736,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
             PHAsset *asset = self.fetchResult[indexPath.item];
             
-            if (selectedAssets.count >= self.imagePickerController.maximumNumberOfSelection && self.imagePickerController.maximumNumberOfSelection != -1) {
+            if (selectedAssets.count >= self.imagePickerController.maximumNumberOfSelection && !self.imagePickerController.isUnLimitSelection) {
                 
                 if ([self.imagePickerController.delegate respondsToSelector:@selector(qb_imagePickerController:shouldSelectAsset:)]) {
                     [self.imagePickerController.delegate qb_imagePickerController:self.imagePickerController shouldSelectAsset:asset];
