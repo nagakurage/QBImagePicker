@@ -516,8 +516,11 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
         _selectionHeader = (SelectionHeader * )headerView;
         
         NSBundle *bundle = self.imagePickerController.assetBundle;
-        [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.select-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
-        
+        if (_isSelectAll) {
+            [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.deselect-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
+        } else {
+            [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.select-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
+        }
         return headerView;
     }
     
@@ -697,8 +700,6 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     if (self.isSelectAll) {
         self.isSelectAll = NO;
         
-        [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.select-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
-        
         for (NSIndexPath *indexPath in self.collectionView.indexPathsForSelectedItems) {
             //                 [self.collectionView deselectItemAtIndexPath:indexPath animated:NO];
             
@@ -728,8 +729,6 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
         [self.collectionView reloadData];
     } else {
         self.isSelectAll = YES;
-        [_selectionHeader.selectAllButton setTitle:NSLocalizedStringFromTableInBundle(@"assets.header.deselect-all", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
-        
         //        [selectedAssets removeAllObjects];
         
         for (long i = self.fetchResult.count - 1; i >= 0 ; i--) {
@@ -742,7 +741,7 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
                 if ([self.imagePickerController.delegate respondsToSelector:@selector(qb_imagePickerController:shouldSelectAsset:)]) {
                     [self.imagePickerController.delegate qb_imagePickerController:self.imagePickerController shouldSelectAsset:asset];
                 }
-                
+                [self updateDoneButtonState];
                 [self.collectionView reloadData];
                 break;
             }
