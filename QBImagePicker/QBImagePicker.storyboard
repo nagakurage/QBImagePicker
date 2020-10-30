@@ -206,7 +206,7 @@
                                                 <constraint firstAttribute="right" secondItem="m99-yj-HSc" secondAttribute="right" constant="4" id="aQv-HN-dQG"/>
                                             </constraints>
                                         </view>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xj3-Gc-u12">
+                                        <button hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xj3-Gc-u12">
                                             <rect key="frame" x="14" y="30" width="50" height="18"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.69999998807907104" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
