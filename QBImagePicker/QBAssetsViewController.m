@@ -504,6 +504,11 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
     }
     
+    [cell.savedView setHidden:YES];
+    if ([self.imagePickerController.savedAssetIds containsObject:asset.localIdentifier]) {
+        [cell.savedView setHidden:NO];
+    }
+    
     return cell;
 }
 
