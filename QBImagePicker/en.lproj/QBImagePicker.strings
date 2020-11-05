@@ -8,6 +8,8 @@
 
 "albums.title" = "Photos";
 
+"assets.saved" = "SAVED";
+
 "assets.header.select-all" = "Select All";
 "assets.header.deselect-all" = "Deselect All";
 

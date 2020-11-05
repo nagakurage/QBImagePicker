@@ -508,6 +508,8 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
     if ([self.imagePickerController.savedAssetIds containsObject:asset.localIdentifier]) {
         [cell.savedView setHidden:NO];
     }
+    NSBundle *bundle = self.imagePickerController.assetBundle;
+    [cell.savedView setTitle:NSLocalizedStringFromTableInBundle(@"assets.saved", @"QBImagePicker", bundle, nil) forState:UIControlStateNormal];
     
     return cell;
 }

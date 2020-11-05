@@ -8,6 +8,8 @@
 
 "albums.title" = "アルバム";
 
+"assets.saved" = "保存済";
+
 "assets.header.select-all" = "すべてを選択";
 "assets.header.deselect-all" = "すべてを選択解除";
 
