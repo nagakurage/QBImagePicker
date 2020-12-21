@@ -17,5 +17,6 @@
 @property (nonatomic, strong) PHAssetCollection *assetCollection;
 
 - (IBAction)selectAllButtonAction:(id)sender;
+- (NSArray *)indexPathsFromIndexSetWithSection:(NSIndexSet *)indexSet section:(NSInteger) section;
 
 @end

@@ -413,27 +413,69 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
                 [self.collectionView reloadData];
             } else {
                 // If we have incremental diffs, tell the collection view to animate insertions and deletions
-                [self.collectionView performBatchUpdates:^{
-                    NSIndexSet *removedIndexes = [collectionChanges removedIndexes];
-                    if ([removedIndexes count]) {
-                        [self.collectionView deleteItemsAtIndexPaths:[removedIndexes qb_indexPathsFromIndexesWithSection:0]];
+                
+                BOOL shouldReload = NO;
+                NSArray *removedPaths;
+                NSArray *insertedPaths;
+                NSArray *changedPaths;
+                if ([collectionChanges removedIndexes] != nil && [[collectionChanges removedIndexes] count]) {
+                    removedPaths =  [self indexPathsFromIndexSetWithSection:[collectionChanges removedIndexes] section: 0];
+                }
+                if ([collectionChanges insertedIndexes] != nil && [[collectionChanges insertedIndexes] count]) {
+                    insertedPaths =  [self indexPathsFromIndexSetWithSection:[collectionChanges insertedIndexes] section: 0];
+                }
+                if ([collectionChanges changedIndexes] != nil && [[collectionChanges changedIndexes] count]) {
+                    changedPaths =  [self indexPathsFromIndexSetWithSection:[collectionChanges changedIndexes] section: 0];
+                }
+                if (changedPaths != nil && removedPaths != nil) {
+                    for (NSIndexPath *changedPath in changedPaths) {
+                        if ([removedPaths containsObject:changedPath]) {
+                            shouldReload = YES;
+                            break;
+                        }
                     }
-                    
-                    NSIndexSet *insertedIndexes = [collectionChanges insertedIndexes];
-                    if ([insertedIndexes count]) {
-                        [self.collectionView insertItemsAtIndexPaths:[insertedIndexes qb_indexPathsFromIndexesWithSection:0]];
-                    }
-                    
-                    NSIndexSet *changedIndexes = [collectionChanges changedIndexes];
-                    if ([changedIndexes count]) {
-                        [self.collectionView reloadItemsAtIndexPaths:[changedIndexes qb_indexPathsFromIndexesWithSection:0]];
-                    }
-                } completion:NULL];
+                }
+                if (removedPaths != nil && removedPaths.lastObject != nil && [(NSIndexPath *) removedPaths.lastObject item] >= self.fetchResult.count) {
+                    shouldReload = YES;
+                }
+
+                if (shouldReload) {
+                    [self.collectionView reloadData];
+                } else {
+                    [self.collectionView performBatchUpdates:^{
+                        NSIndexSet *removedIndexes = [collectionChanges removedIndexes];
+                        if ([removedIndexes count]) {
+                            [self.collectionView deleteItemsAtIndexPaths:[removedIndexes qb_indexPathsFromIndexesWithSection:0]];
+                        }
+                        
+                        NSIndexSet *insertedIndexes = [collectionChanges insertedIndexes];
+                        if ([insertedIndexes count]) {
+                            [self.collectionView insertItemsAtIndexPaths:[insertedIndexes qb_indexPathsFromIndexesWithSection:0]];
+                        }
+                        
+                        NSIndexSet *changedIndexes = [collectionChanges changedIndexes];
+                        if ([changedIndexes count]) {
+                            [self.collectionView reloadItemsAtIndexPaths:[changedIndexes qb_indexPathsFromIndexesWithSection:0]];
+                        }
+                    } completion:NULL];
+                }
             }
             
             [self resetCachedAssets];
         }
     });
+}
+
+- (NSArray *)indexPathsFromIndexSetWithSection:(NSIndexSet *)indexSet section:(NSInteger) section
+{
+    if (indexSet == nil) {
+        return nil;
+    }
+    NSMutableArray *indexPaths = [NSMutableArray array];
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+        [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection: section]];
+    }];
+    return indexPaths;
 }
 
 
@@ -494,6 +536,9 @@ static CGSize CGSizeScale(CGSize size, CGFloat scale) {
             cell.videoIndicatorView.videoIcon.hidden = NO;
             cell.videoIndicatorView.slomoIcon.hidden = YES;
         }
+        
+        cell.videoIndicatorView.gradientLayer.frame = CGRectMake(0.0, 0.0, cell.bounds.size.width, cell.videoIndicatorView.gradientLayer.bounds.size.height);
+        [cell.videoIndicatorView layoutIfNeeded];
     } else {
         cell.videoIndicatorView.hidden = YES;
     }

@@ -13,6 +13,8 @@
 
 @interface QBVideoIndicatorView : UIView
 
+@property (nonatomic, strong) CAGradientLayer *gradientLayer;
+
 @property (nonatomic, weak) IBOutlet UILabel *timeLabel;
 @property (nonatomic, weak) IBOutlet QBVideoIconView *videoIcon;
 @property (nonatomic, weak) IBOutlet QBSlomoIconView *slomoIcon;
