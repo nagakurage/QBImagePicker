@@ -13,14 +13,14 @@
 "assets.header.select-all" = "すべてを選択";
 "assets.header.deselect-all" = "すべてを選択解除";
 
-"assets.footer.photo" = "写真: %ld";
-"assets.footer.photos" = "写真: %ld";
-"assets.footer.video" = "ビデオ: %ld";
-"assets.footer.videos" = "ビデオ: %ld";
-"assets.footer.photo-and-video" = "写真: %ld、ビデオ%ld";
-"assets.footer.photos-and-video" = "写真: %ld、ビデオ%ld";
-"assets.footer.photo-and-videos" = "写真: %ld、ビデオ%ld";
-"assets.footer.photos-and-videos" = "写真: %ld、ビデオ%ld";
+"assets.footer.photo" = "写真 %ld";
+"assets.footer.photos" = "写真 %ld";
+"assets.footer.video" = "ビデオ %ld";
+"assets.footer.videos" = "ビデオ %ld";
+"assets.footer.photo-and-video" = "写真 %ld / ビデオ%ld";
+"assets.footer.photos-and-video" = "写真 %ld / ビデオ%ld";
+"assets.footer.photo-and-videos" = "写真 %ld / ビデオ%ld";
+"assets.footer.photos-and-videos" = "写真 %ld / ビデオ%ld";
 
 "assets.toolbar.item-selected" = "%ld 個を選択中";
 "assets.toolbar.items-selected" = "%ld 個を選択中";
